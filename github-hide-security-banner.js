@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        GitHub Hide Security Banners
-// @version     1.0.0
+// @version     1.0.1
 // @description A userscript that removes non-closable security banners from GitHub project boards ("Single-sign on to see items ..."", "Connect from an allowed IP...").
 // @license     MIT
 // @author      Klaus Eckelt
@@ -15,10 +15,10 @@
 //
 // @description 19/05/2025, 10:46:06
 // ==/UserScript==
- 
+
 (() => {
   "use strict";
- 
+
   const autoClose = GM_getValue("ghsb-autoclose", false);
   document
     .querySelectorAll(".color-bg-inset .octicon-shield-lock")
@@ -30,28 +30,28 @@
         buttonGroup.style.display = "flex";
         buttonGroup.style.gap = "1em";
         buttonGroup.style.marginLeft = "auto";
- 
+
         //  add a sibling element to the icon
         const close = document.createElement("a");
         close.innerText = "❌";
         close.style.fontWeight = "bold";
         close.style.cursor = "pointer";
- 
+
         close.title = "Close once";
         // on click remove the parent element
         close.onclick = () => {
           el.parentElement.parentElement.remove();
         };
- 
+
         // insert as last  child of the parent element
         buttonGroup.appendChild(close);
- 
+
         //  add a sibling element to the icon
         const ban = document.createElement("a");
         ban.innerText = "🚫";
         ban.style.fontWeight = "bold";
         ban.style.cursor = "pointer";
-        ban.title = "Close once";
+        ban.title = "Close always";
         // on click remove the parent element
         ban.onclick = () => {
           GM_setValue("ghsb-autoclose", !autoClose);
@@ -61,13 +61,13 @@
               el.parentElement.parentElement.remove();
             });
         };
- 
+
         // insert as last  child of the parent element
         buttonGroup.appendChild(ban);
         el.parentElement.appendChild(buttonGroup);
       }
     });
- 
+
   // Add GM options
   GM_registerMenuCommand(
     `Click to close banners ${autoClose ? "manually" : "automatically"}`,
